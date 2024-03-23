@@ -21,12 +21,10 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.UUID;
 
 import static br.com.lanchonete.rest.controllers.ClientController.BASE_PATH;
 
@@ -76,6 +74,20 @@ public class ClientController {
             String token = authClientProviderRepository.signIn(identifierClientInputDTO.getUsername(), identifierClientInputDTO.getPassword());
             Client client = identifierClientUsecase.identifierByCPF(identifierClientInputDTO.getUsername());
             return clientOutputMapper.mapClientOutputDTOFromClient(client, token);
+        } catch (Exception e) {
+            throw APIException.internalError("Erro interno", Collections.singletonList(e.getMessage()));
+        }
+    }
+
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Obtenção o cliente pelo CPF com sucesso") })
+    @Operation(summary = "Obtem o cliente")
+    @Counted(value = "execution.count.getClientByUsername")
+    @Timed(value = "execution.time.getClientByUsername", longTask = true)
+    @GetMapping(value = "/{username}")
+    public ClientOutputDTO getClientByCPF(@PathVariable String username) throws APIException {
+        try {
+            Client client = identifierClientUsecase.identifierByCPF(username);
+            return clientOutputMapper.mapClientOutputDTOFromClient(client);
         } catch (Exception e) {
             throw APIException.internalError("Erro interno", Collections.singletonList(e.getMessage()));
         }
