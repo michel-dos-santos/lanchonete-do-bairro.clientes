@@ -33,7 +33,7 @@ services:
       - AWS_COGNITO_CLIENT_ID=${AWS_COGNITO_CLIENT_ID}
       - AWS_COGNITO_USER_POOL_ID=${AWS_COGNITO_USER_POOL_ID}
     ports:
-      - "8081:8081"
+      - "8050:8050"
     networks:
       - commons-app
     depends_on:
