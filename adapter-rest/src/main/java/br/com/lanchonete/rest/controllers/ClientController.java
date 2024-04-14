@@ -79,14 +79,14 @@ public class ClientController {
         }
     }
 
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Obtenção o cliente pelo CPF com sucesso") })
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Obtenção o cliente pelo identificador com sucesso") })
     @Operation(summary = "Obtem o cliente")
-    @Counted(value = "execution.count.getClientByUsername")
-    @Timed(value = "execution.time.getClientByUsername", longTask = true)
-    @GetMapping(value = "/{username}")
-    public ClientOutputDTO getClientByCPF(@PathVariable String username) throws APIException {
+    @Counted(value = "execution.count.getClientById")
+    @Timed(value = "execution.time.getClientById", longTask = true)
+    @GetMapping(value = "/{id}")
+    public ClientOutputDTO getClientById(@PathVariable UUID id) throws APIException {
         try {
-            Client client = identifierClientUsecase.identifierByCPF(username);
+            Client client = identifierClientUsecase.identifierById(id);
             return clientOutputMapper.mapClientOutputDTOFromClient(client);
         } catch (Exception e) {
             throw APIException.internalError("Erro interno", Collections.singletonList(e.getMessage()));

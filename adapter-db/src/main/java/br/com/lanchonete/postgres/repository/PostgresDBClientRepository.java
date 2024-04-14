@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class PostgresDBClientRepository implements ClientRepository {
@@ -45,6 +46,16 @@ public class PostgresDBClientRepository implements ClientRepository {
         Optional<ClientEntity> clientEntityOptional = clientRepository.findByCpf(cpf);
         if (clientEntityOptional.isEmpty()) {
             throw new ClientNotFoundException("cpf", cpf);
+        }
+
+        return modelMapper.map(clientEntityOptional.get(), Client.class);
+    }
+
+    @Override
+    public Client identifierById(UUID id) {
+        Optional<ClientEntity> clientEntityOptional = clientRepository.findById(id);
+        if (clientEntityOptional.isEmpty()) {
+            throw new ClientNotFoundException("id", id.toString());
         }
 
         return modelMapper.map(clientEntityOptional.get(), Client.class);
