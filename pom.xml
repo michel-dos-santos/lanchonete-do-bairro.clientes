@@ -32,8 +32,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.projectKey>michel-dos-santos_lanchonete-do-bairro.clientes</sonar.projectKey>
-        <sonar.organization>michel-dos-santos</sonar.organization>
+        <sonar.organization>lanchonete-do-bairro-clientes-postech-fiap</sonar.organization>
         <sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
+        <sonar.scm.disabled>true</sonar.scm.disabled>
+        <sonar.token>23f6f3bc9ff06211edda7d1f97cf4b7569eeeef8</sonar.token>
     </properties>
 
     <dependencies>
