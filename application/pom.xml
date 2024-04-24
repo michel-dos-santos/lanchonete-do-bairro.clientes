@@ -23,7 +23,7 @@
         <sonar.java.binaries>target</sonar.java.binaries>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.projectKey>michel-dos-santos_lanchonete-do-bairro.clientes</sonar.projectKey>
-        <sonar.organization>lanchonete-do-bairro-clientes-postech-fiap</sonar.organization>
+        <sonar.organization>lanchonete-do-bairro-postech-fiap</sonar.organization>
         <sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
         <sonar.scm.disabled>true</sonar.scm.disabled>
     </properties>
