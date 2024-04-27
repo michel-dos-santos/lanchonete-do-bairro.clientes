@@ -22,14 +22,14 @@ public class IdentifierClientUsecase implements IdentifierClient {
     public Client identifierByCPF(String cpf) {
         logRepository.info(IdentifierClientUsecase.class, LogCode.LogCodeInfo._0004);
         Client client = clientRepository.identifierByCPF(cpf);
-        logRepository.info(IdentifierClientUsecase.class, LogCode.LogCodeInfo._0005);
+        logRepository.info(IdentifierClientUsecase.class, LogCode.LogCodeInfo._0006);
         return client;
     }
     @Override
     public Client identifierById(UUID id) {
-        logRepository.info(IdentifierClientUsecase.class, LogCode.LogCodeInfo._0004);
-        Client client = clientRepository.identifierById(id);
         logRepository.info(IdentifierClientUsecase.class, LogCode.LogCodeInfo._0005);
+        Client client = clientRepository.identifierById(id);
+        logRepository.info(IdentifierClientUsecase.class, LogCode.LogCodeInfo._0006);
         return client;
     }
 }
