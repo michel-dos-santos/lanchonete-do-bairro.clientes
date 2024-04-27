@@ -38,6 +38,8 @@ services:
       - commons-app
     depends_on:
       - postgres-db-clients
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
   data:
