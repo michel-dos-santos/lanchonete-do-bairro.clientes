@@ -12,13 +12,17 @@ public class Log4jRepository implements LogRepository {
     @Override
     public void debug(Class<?> logClass, LogCode.LogCodeDebug logCode) {
         Logger logger = LoggerFactory.getLogger(logClass);
-        logger.debug(String.format("TAG: %s - MESSAGE: %s", logCode.name(), logCode.getDescription()));
+        String msg = String.format("TAG: %s - MESSAGE: %s", logCode.name(), logCode.getDescription());
+        logger.debug(msg);
+        System.out.print(msg);
     }
 
     @Override
     public void info(Class<?> logClass, LogCode.LogCodeInfo logCode) {
         Logger logger = LoggerFactory.getLogger(logClass);
-        logger.info(String.format("TAG: %s - MESSAGE: %s", logCode.name(), logCode.getDescription()));
+        String msg = String.format("TAG: %s - MESSAGE: %s", logCode.name(), logCode.getDescription());
+        logger.info(msg);
+        System.out.print(msg);
     }
 
     @Override

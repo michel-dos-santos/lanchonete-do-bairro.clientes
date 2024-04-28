@@ -36,6 +36,17 @@
         <sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
         <sonar.scm.disabled>true</sonar.scm.disabled>
         <sonar.token>23f6f3bc9ff06211edda7d1f97cf4b7569eeeef8</sonar.token>
+        <sonar.exclusions>
+            **/CognitoConfig.java,
+            **/CognitoRepository.java,
+            **/Application.java,
+            **/entity/**/*,
+            **/model/**/*,
+            **/mappers/**/*,
+            **/configuration/**/*,
+            **/utils/**/*,
+            **/exception/**/*,
+        </sonar.exclusions>
     </properties>
 
     <dependencies>

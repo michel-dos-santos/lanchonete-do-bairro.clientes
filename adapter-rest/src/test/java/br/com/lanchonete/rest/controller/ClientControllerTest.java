@@ -11,7 +11,6 @@ import br.com.lanchonete.rest.mappers.outputs.dtos.ClientOutputDTO;
 import br.com.lanchonete.usecase.IdentifierClientUsecase;
 import br.com.lanchonete.usecase.SaveClientUsecase;
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.exceptions.base.MockitoException;
@@ -21,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Objects;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,7 +27,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Disabled("This test is disabled temporally")
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(ClientController.class)
 public class ClientControllerTest extends ControllerTestBase {
@@ -47,7 +44,7 @@ public class ClientControllerTest extends ControllerTestBase {
 
     @Test
     public void saveClientSuccess() throws Exception {
-        String url = ClientController.BASE_PATH.concat("/sign-in");
+        String url = ClientController.BASE_PATH.concat("/sign-up");
         ClientInputDTO clientInputDTO = easyRandom.nextObject(ClientInputDTO.class);
         clientInputDTO.setCpf("10902661035");
         clientInputDTO.setEmail("email@email.com");
@@ -63,15 +60,16 @@ public class ClientControllerTest extends ControllerTestBase {
         clientOutputDTO =
                 doPost(url, clientInputDTO, HttpStatus.OK, new TypeReference<ClientOutputDTO>() {});
 
-        assertThat(!Objects.isNull(clientOutputDTO.getId()));
-        assertThat(clientOutputDTO.getName().equals(clientOutputDTO.getName()));
-        assertThat(clientOutputDTO.getCpf().equals(clientOutputDTO.getCpf()));
-        assertThat(clientOutputDTO.getEmail().equals(clientOutputDTO.getEmail()));
+        assertThat(clientOutputDTO.getId()).isNotNull();
+        assertThat(clientOutputDTO.getName()).isEqualTo(clientInputDTO.getName());
+        assertThat(clientOutputDTO.getCpf()).isEqualTo(clientInputDTO.getCpf());
+        assertThat(clientOutputDTO.getEmail()).isEqualTo(clientInputDTO.getEmail());
+        assertThat(clientOutputDTO.getToken()).isNull();
     }
 
     @Test
     public void saveClientException() throws Exception {
-        String url = ClientController.BASE_PATH.concat("/sign-in");
+        String url = ClientController.BASE_PATH.concat("/sign-up");
         ClientInputDTO clientInputDTO = easyRandom.nextObject(ClientInputDTO.class);
         clientInputDTO.setCpf("10902661035");
         clientInputDTO.setEmail("email@email.com");
@@ -81,6 +79,24 @@ public class ClientControllerTest extends ControllerTestBase {
 
         when(clientInputMapper.mapClientFromClientInputDTO(clientInputDTO)).thenReturn(client);
         when(saveClientUsecase.save(any())).thenThrow(new MockitoException("Cliente não informado"));
+
+        ResultActions resultActions = doPost(url, clientInputDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        resultActions.andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void saveClientFoundException() throws Exception {
+        String url = ClientController.BASE_PATH.concat("/sign-up");
+        ClientInputDTO clientInputDTO = easyRandom.nextObject(ClientInputDTO.class);
+        clientInputDTO.setCpf("10902661035");
+        clientInputDTO.setEmail("email@email.com");
+        clientInputDTO.setPassword("password");
+        Client client = modelMapperAPI.map(clientInputDTO, Client.class);
+        client.setId(easyRandom.nextObject(UUID.class));
+
+        when(clientInputMapper.mapClientFromClientInputDTO(clientInputDTO)).thenReturn(client);
+        when(saveClientUsecase.save(any())).thenThrow(new MockitoException("Cliente já existente com base no cpf: 10902661035"));
 
         ResultActions resultActions = doPost(url, clientInputDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -102,16 +118,14 @@ public class ClientControllerTest extends ControllerTestBase {
 
         when(authClientProviderRepository.signIn(identifierClientInputDTO.getUsername(), identifierClientInputDTO.getPassword())).thenReturn(token);
         when(identifierClientUsecase.identifierByCPF(identifierClientInputDTO.getUsername())).thenReturn(client);
-        when(clientOutputMapper.mapClientOutputDTOFromClient(client, token)).thenReturn(clientOutputDTO);
+        when(clientOutputMapper.mapClientOutputDTOFromClient(client, null)).thenReturn(clientOutputDTO);
 
         clientOutputDTO =
                 doPost(url, identifierClientInputDTO, HttpStatus.OK, new TypeReference<ClientOutputDTO>() {});
 
-        assertThat(!Objects.isNull(clientOutputDTO.getId()));
-        assertThat(clientOutputDTO.getName().equals(clientOutputDTO.getName()));
-        assertThat(clientOutputDTO.getCpf().equals(clientOutputDTO.getCpf()));
-        assertThat(clientOutputDTO.getEmail().equals(clientOutputDTO.getEmail()));
-        assertThat(clientOutputDTO.getToken().equals(clientOutputDTO.getToken()));
+        assertThat(clientOutputDTO.getId()).isNotNull();
+        assertThat(clientOutputDTO.getCpf()).isEqualTo(identifierClientInputDTO.getUsername());
+        assertThat(clientOutputDTO.getToken()).isNotNull();
     }
 
     @Test
