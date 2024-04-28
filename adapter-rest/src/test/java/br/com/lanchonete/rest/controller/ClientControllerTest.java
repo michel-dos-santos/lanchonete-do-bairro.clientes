@@ -25,6 +25,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -142,6 +143,41 @@ public class ClientControllerTest extends ControllerTestBase {
         when(identifierClientUsecase.identifierByCPF(identifierClientInputDTO.getUsername())).thenThrow(new MockitoException("Cliente não localizado"));
 
         ResultActions resultActions = doPost(url, identifierClientInputDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        resultActions.andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void getClientByIdSuccess() throws Exception {
+        String url = ClientController.BASE_PATH.concat("/{id}");
+        String token = easyRandom.nextObject(String.class);
+        Client client = easyRandom.nextObject(Client.class);
+        client.setId(easyRandom.nextObject(UUID.class));
+        client.setCpf("10902661037");
+        ClientOutputDTO clientOutputDTO = modelMapperAPI.map(client, ClientOutputDTO.class);
+        clientOutputDTO.setToken(token);
+
+        when(identifierClientUsecase.identifierById(client.getId())).thenReturn(client);
+        when(clientOutputMapper.mapClientOutputDTOFromClient(client)).thenReturn(clientOutputDTO);
+
+        clientOutputDTO =
+                doGet(url, HttpStatus.OK, new TypeReference<ClientOutputDTO>() {}, client.getId());
+
+        assertThat(clientOutputDTO.getId()).isNotNull();
+        assertThat(clientOutputDTO.getCpf()).isEqualTo(client.getCpf());
+        assertThat(clientOutputDTO.getToken()).isNotNull();
+    }
+
+    @Test
+    public void getClientByIdException() throws Exception {
+        String url = ClientController.BASE_PATH.concat("/{id}");
+        String token = easyRandom.nextObject(String.class);
+        Client client = easyRandom.nextObject(Client.class);
+        client.setId(easyRandom.nextObject(UUID.class));
+
+        when(identifierClientUsecase.identifierById(client.getId())).thenThrow(new MockitoException("Cliente não localizado"));
+
+        ResultActions resultActions = doGet(url, HttpStatus.INTERNAL_SERVER_ERROR, client.getId());
 
         resultActions.andExpect(status().isInternalServerError());
     }
