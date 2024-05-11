@@ -57,7 +57,8 @@ public class ClientController {
         try {
             Client client = clientInputMapper.mapClientFromClientInputDTO(clientInputDTO);
             client = saveClientUsecase.save(client);
-            authClientProviderRepository.signUp(clientInputDTO.getCpf(), clientInputDTO.getPassword(), clientInputDTO.getEmail());
+            //TODO APENAS PRA TESTE ESTA COMENTADO
+            //authClientProviderRepository.signUp(clientInputDTO.getCpf(), clientInputDTO.getPassword(), clientInputDTO.getEmail());
             return clientOutputMapper.mapClientOutputDTOFromClient(client);
         } catch (Exception e) {
             throw APIException.internalError("Erro interno", Collections.singletonList(e.getMessage()));
@@ -71,9 +72,10 @@ public class ClientController {
     @PostMapping(value = "/sign-in")
     public ClientOutputDTO identifierClient(@RequestBody @Valid IdentifierClientInputDTO identifierClientInputDTO) throws APIException {
         try {
-            String token = authClientProviderRepository.signIn(identifierClientInputDTO.getUsername(), identifierClientInputDTO.getPassword());
+            //TODO APENAS PRA TESTE ESTA COMENTADO
+            //String token = authClientProviderRepository.signIn(identifierClientInputDTO.getUsername(), identifierClientInputDTO.getPassword());
             Client client = identifierClientUsecase.identifierByCPF(identifierClientInputDTO.getUsername());
-            return clientOutputMapper.mapClientOutputDTOFromClient(client, token);
+            return clientOutputMapper.mapClientOutputDTOFromClient(client, null);
         } catch (Exception e) {
             throw APIException.internalError("Erro interno", Collections.singletonList(e.getMessage()));
         }
