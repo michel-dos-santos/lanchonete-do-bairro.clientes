@@ -10,7 +10,7 @@ services:
     restart: always
     container_name: postgres-db-clients
     environment:
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD_CLIENTS}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -24,9 +24,9 @@ services:
     restart: always
     container_name: adapter-rest-clients
     environment:
-      - DB_URL=${DB_URL_CLIENTS}
-      - DB_USER=${DB_USER_CLIENTS}
-      - DB_PASSWORD=${DB_PASSWORD_CLIENTS}
+      - DB_URL=${DB_URL}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
       - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
       - AWS_ACCESS_SECRET=${AWS_ACCESS_SECRET}
       - AWS_REGION=${AWS_REGION}
