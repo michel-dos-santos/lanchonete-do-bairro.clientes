@@ -75,11 +75,11 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-      - name: "🖼️ Build docker image adapter-rest-fast-food"
+      - name: "🖼️ Build docker image adapter-rest-clientes"
         run: |
           docker build . --file adapter-rest/Dockerfile --tag ${{ secrets.DOCKER_USER }}/adapter-rest-clientes:latest
 
-      - name: "🚀 Docker push adapter-rest-fast-food"
+      - name: "🚀 Docker push adapter-rest-clientes"
         run: |
          docker push ${{ secrets.DOCKER_USER }}/adapter-rest-clientes:latest
 
