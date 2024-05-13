@@ -25,13 +25,12 @@ public class PostgresDBClientRepositoryTests {
 
     @Autowired
     private PostgresDBClientRepository clientRepository;
-    private static ModelMapper modelMapperTest;
+
     private static EasyRandom easyRandom;
 
     @BeforeAll
     public static void beforeTests() {
         easyRandom = new EasyRandom();
-        modelMapperTest = new ModelMapper();
     }
 
     @Test
