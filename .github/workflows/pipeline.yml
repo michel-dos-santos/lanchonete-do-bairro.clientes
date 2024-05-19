@@ -100,18 +100,17 @@ jobs:
           repository: michel-dos-santos/lanchonete-do-bairro.infra-k8s
           path: './infra'
 
-#      - name: "🚀 Deploy image to Amazon EKS"
-#        run: |
-#          kubectl delete secret dynamic-secrets \
-#            --ignore-not-found \
-#            && kubectl create secret generic dynamic-secrets \
-#            --from-literal=AWS_ACCESS_KEY='${{ secrets.AWS_ACCESS_KEY }}' \
-#            --from-literal=PROFILE='${{ secrets.PROFILE }}' \
-#            --from-literal=AWS_ACCESS_SECRET='${{ secrets.AWS_ACCESS_SECRET }}' \
-#            --from-literal=AWS_REGION='${{ secrets.AWS_REGION }}' \
-#            --from-literal=AWS_COGNITO_CLIENT_ID='${{ secrets.AWS_COGNITO_CLIENT_ID }}' \
-#            --from-literal=AWS_COGNITO_USER_POOL_ID='${{ secrets.AWS_COGNITO_USER_POOL_ID }}' \
-#            --from-literal=DB_URL='${{ secrets.DB_URL }}' \
-#            --from-literal=DB_USER='${{ secrets.DB_USER }}' \
-#            --from-literal=DB_PASSWORD='${{ secrets.DB_PASSWORD }}' \
-#            && kubectl apply -f ./infra/src/k8s --validate=false
+      - name: "🚀 Deploy image to Amazon EKS"
+        run: |
+          kubectl delete secret dynamic-secrets-clientes \
+            --ignore-not-found \
+            && kubectl create secret generic dynamic-secrets-clientes \
+            --from-literal=AWS_ACCESS_KEY='${{ secrets.AWS_ACCESS_KEY }}' \
+            --from-literal=AWS_ACCESS_SECRET='${{ secrets.AWS_ACCESS_SECRET }}' \
+            --from-literal=AWS_REGION='${{ secrets.AWS_REGION }}' \
+            --from-literal=AWS_COGNITO_CLIENT_ID='${{ secrets.AWS_COGNITO_CLIENT_ID }}' \
+            --from-literal=AWS_COGNITO_USER_POOL_ID='${{ secrets.AWS_COGNITO_USER_POOL_ID }}' \
+            --from-literal=DB_URL='${{ secrets.DB_URL }}' \
+            --from-literal=DB_USER='${{ secrets.DB_USER }}' \
+            --from-literal=DB_PASSWORD='${{ secrets.DB_PASSWORD }}' \
+            && kubectl apply -f ./infra/src/k8s/clients --validate=false
