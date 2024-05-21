@@ -10,10 +10,10 @@ Feature: Obter dados do cliente
     And com o response contendo o identificador="Cliente não encontrado com base no id: 00000000-0000-0000-0000-000000000000"
 
   Scenario: Tentativa de obter os dados do cliente com sucesso
-    Given que o sistema informa o identificador="770e8039-5be8-4066-9d75-846ce13baf13" do cliente
+    Given que o sistema informa o identificador="846f7ede-dd90-497e-83a4-4878718ebd03" do cliente
     And envia a requisição para url="http://localhost:8010/api/v1/clients/"
     Then a requisição retornará o status code 200
-    And com o response contendo o identificador="770e8039-5be8-4066-9d75-846ce13baf13"
+    And com o response contendo o identificador="846f7ede-dd90-497e-83a4-4878718ebd03"
 
 
 
