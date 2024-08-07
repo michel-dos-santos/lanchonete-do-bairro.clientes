@@ -1,16 +1,22 @@
 package br.com.lanchonete.rest.controllers;
 
 import br.com.lanchonete.model.Client;
+import br.com.lanchonete.model.RequestDeleteClient;
 import br.com.lanchonete.port.repository.AuthClientProviderRepository;
 import br.com.lanchonete.port.repository.LogRepository;
 import br.com.lanchonete.rest.exception.APIException;
 import br.com.lanchonete.rest.mappers.inputs.ClientInputMapper;
+import br.com.lanchonete.rest.mappers.inputs.RequestDeleteClientInputMapper;
 import br.com.lanchonete.rest.mappers.inputs.dtos.ClientInputDTO;
 import br.com.lanchonete.rest.mappers.inputs.dtos.IdentifierClientInputDTO;
+import br.com.lanchonete.rest.mappers.inputs.dtos.RequestDeleteClientInputDTO;
 import br.com.lanchonete.rest.mappers.outputs.ClientOutputMapper;
+import br.com.lanchonete.rest.mappers.outputs.RequestDeleteClientOutputMapper;
 import br.com.lanchonete.rest.mappers.outputs.dtos.ClientOutputDTO;
+import br.com.lanchonete.rest.mappers.outputs.dtos.RequestDeleteClientOutputDTO;
 import br.com.lanchonete.usecase.IdentifierClientUsecase;
 import br.com.lanchonete.usecase.SaveClientUsecase;
+import br.com.lanchonete.usecase.SaveRequestDeleteClientUsecase;
 import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,11 +44,17 @@ public class ClientController {
     @Autowired
     private ClientInputMapper clientInputMapper;
     @Autowired
+    private RequestDeleteClientInputMapper requestDeleteClientInputMapper;
+    @Autowired
     private ClientOutputMapper clientOutputMapper;
+    @Autowired
+    private RequestDeleteClientOutputMapper requestDeleteClientOutputMapper;
     @Autowired
     private LogRepository logRepository;
     @Autowired
     private SaveClientUsecase saveClientUsecase;
+    @Autowired
+    private SaveRequestDeleteClientUsecase saveRequestDeleteClientUsecase;
     @Autowired
     private IdentifierClientUsecase identifierClientUsecase;
     @Autowired
@@ -90,6 +102,20 @@ public class ClientController {
         try {
             Client client = identifierClientUsecase.identifierById(id);
             return clientOutputMapper.mapClientOutputDTOFromClient(client);
+        } catch (Exception e) {
+            throw APIException.internalError("Erro interno", Collections.singletonList(e.getMessage()));
+        }
+    }
+
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Indica que a solicitação para exclusão dos dados do cliente foi executada com sucesso") })
+    @Operation(summary = "Persiste os dados da solicitação de exclusão dos dados do cliente")
+    @Counted(value = "execution.count.requestDeleteClientData")
+    @Timed(value = "execution.time.requestDeleteClientData", longTask = true)
+    @PostMapping(value = "request-delete")
+    public RequestDeleteClientOutputDTO requestDeleteClientData(@RequestBody @Valid RequestDeleteClientInputDTO requestDeleteClientInputDTO) throws APIException {
+        try {
+            RequestDeleteClient requestDeleteClient = requestDeleteClientInputMapper.mapRequestDeleteClientFromRequestDeleteClientInputDTO(requestDeleteClientInputDTO);
+            return requestDeleteClientOutputMapper.mapRequestDeleteClientFromRequestDeleteClientOutputDTO(saveRequestDeleteClientUsecase.save(requestDeleteClient));
         } catch (Exception e) {
             throw APIException.internalError("Erro interno", Collections.singletonList(e.getMessage()));
         }
